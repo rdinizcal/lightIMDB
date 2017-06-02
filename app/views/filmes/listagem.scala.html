@@ -2,9 +2,24 @@
 @(filmes: List[Filme])
 
 @main("IMDB") {
-   <ul>
-     @for(filme <- filmes) {
-       <li>@filme.titulo - @filme.diretor - @filme.anoProducao</li> 
-     }
-   </ul>
+	<table class="table">
+		<thead class="thead-default">
+		<tr>
+      		<th>#</th>
+      		<th>Titulo</th>
+      		<th>Diretor</th>
+      		<th>Ano</th>
+    	</tr>
+		</thead>
+		<tbody>
+	    	@for(filme <- filmes) {
+				<tr>
+					<th scope="row">@filme.id</th> 
+		       		<td>@filme.titulo</td> 
+					<td>@filme.diretor</td>
+					<td> @filme.anoProducao</td>
+				</tr>
+	     	}
+		</tbody>
+	</table>
 }
