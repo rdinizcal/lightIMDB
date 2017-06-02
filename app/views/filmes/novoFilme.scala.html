@@ -3,13 +3,25 @@
 
 @main("Novo filme") {
 
- @helper.form(action = routes.FilmeController.novoFilmeSubmissao()) {
-  @helper.inputText(filmeForm("Titulo"))
-  @helper.inputText(filmeForm("Diretor"))
-  @helper.inputText(filmeForm("Ano"))
-
-  <div class="form-actions">
-    <button type="submit">Cadastrar</button> 
-  </div>
- }
+<div class=" vertical-center">
+	<div class="container text-center col-md-2 col-md-offset-5">
+		@helper.form(action = routes.FilmeController.novoFilmeSubmissao()) {
+			@helper.input(filmeForm("Titulo"))  { (id, name, value, args) =>
+				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+			}
+	
+			@helper.input(filmeForm("Diretor")) { (id, name, value, args) =>
+				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+			}
+	
+			@helper.input(filmeForm("Ano")) { (id, name, value, args) =>
+				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+			}
+	
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">Cadastrar</button> 
+			</div>
+		}
+	</div>
+</div>
 }
