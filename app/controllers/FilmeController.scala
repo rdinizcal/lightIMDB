@@ -3,7 +3,6 @@ package controllers
 import play.api.mvc._
 import models.Filme
 import models.FilmeDAO
-import models.FilmeDAO
 import javax.inject.Inject
 import play.api.data._
 import play.api.data.Forms._
@@ -41,8 +40,8 @@ class FilmeController @Inject()(dao: FilmeDAO, val messagesApi: MessagesApi) ext
         dao.salvar(novoFilme)
         var filmes = dao.listar
         Created(views.html.filmes.listagem(filmes))
-    }
-  )
+      }
+    )
     
   }
   

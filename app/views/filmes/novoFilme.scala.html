@@ -3,6 +3,26 @@
 
 @main("Novo filme") {
 
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+
+	<img src="@routes.Assets.versioned("images/logo-unb.png")" class="img-rounded" width="60">
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="/filme/novo">Novo filme</a>
+			</li>
+			<li class="nav-item ">
+				<a class="nav-link" href="/filme">Listar filmes</a>
+			</li>
+		</ul>
+        <form class="form-inline my-2 my-md-0">
+			<input class="form-control mr-sm-2" type="text" placeholder="Search">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
 <div class=" vertical-center">
 	<div class="container text-center col-md-2 col-md-offset-5">
 		@helper.form(action = routes.FilmeController.novoFilmeSubmissao()) {

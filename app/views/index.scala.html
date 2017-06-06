@@ -1,5 +1,23 @@
-@()
+@(userForm: Form[UserVO])(implicit messages: Messages)
 
 @main("UnB - IMDB") {
-	<h1>Home Page</h1>
+
+<div class=" vertical-center">
+	<div class="container text-center col-md-2 col-md-offset-5">
+		@helper.form(action = routes.UsuarioController.loginSubmissao()) {
+			@helper.input(userForm("Email"))  { (id, name, value, args) =>
+				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+			}
+	
+			@helper.input(userForm("Senha")) { (id, name, value, args) =>
+				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
+			}
+	
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">Entrar</button> 
+			</div>
+		}
+	</div>
+</div>
+	
 }
