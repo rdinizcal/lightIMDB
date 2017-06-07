@@ -20,10 +20,20 @@ class UsuarioController @Inject()(dao: UsuarioDAO, val messagesApi: MessagesApi)
   def loginSubmissao = Action { implicit request =>
     userForm.bindFromRequest.fold(
         formWithErrors => {
-        BadRequest("Erro")
+        BadRequest(views.html.users.login(formWithErrors))
       },
       usuario => {
-        Ok(dao.pesquisaPorEmail(usuario.email).toString())
+        val usuarios = dao.pesquisaPorEmail(usuario.email)
+        if(usuarios.size<1){ 
+          Ok("Usuario não encontrado")
+        }else{
+          val user = usuarios.apply(0);
+          if(usuario.senha == user.senha){
+            Redirect("/filme")
+          }else{
+             Ok("Senha errada") 
+          }
+        }
       })
   }
   
