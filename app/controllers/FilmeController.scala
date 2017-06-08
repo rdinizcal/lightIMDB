@@ -26,7 +26,7 @@ class FilmeController @Inject()(dao: FilmeDAO, val messagesApi: MessagesApi) ext
       var filmes = dao.listar
       Ok(views.html.filmes.listagem(filmes))
     }.getOrElse {
-      Unauthorized("Oops, you are not connected")
+      Unauthorized(views.html.unauthorized())
     }
   }
   
@@ -34,7 +34,7 @@ class FilmeController @Inject()(dao: FilmeDAO, val messagesApi: MessagesApi) ext
     request.session.get("connected").map { user =>
       Ok(views.html.filmes.novoFilme(filmeForm))
     }.getOrElse {
-      Unauthorized("Oops, you are not connected")
+      Unauthorized(views.html.unauthorized())
     }
   }
   
