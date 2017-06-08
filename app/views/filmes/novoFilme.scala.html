@@ -1,7 +1,7 @@
 @* novoFilme Template File *@
 @(filmeForm: Form[FilmeVO])(implicit messages: Messages)
 
-@main("Novo filme") {
+@main("Cadastrar filme") {
 
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
 
@@ -24,24 +24,16 @@
 </nav>
 
 <div class=" vertical-center">
-	<div class="container text-center col-md-2 col-md-offset-5">
-		@helper.form(action = routes.FilmeController.novoFilmeSubmissao()) {
-			@helper.input(filmeForm("Titulo"))  { (id, name, value, args) =>
-				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
-			}
-	
-			@helper.input(filmeForm("Diretor")) { (id, name, value, args) =>
-				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
-			}
-	
-			@helper.input(filmeForm("Ano")) { (id, name, value, args) =>
-				<input class="form-control" type="text" name="@name" id="@id" @toHtmlArgs(args)>
-			}
-	
-			<div class="form-actions">
-				<button class="btn btn-primary" type="submit">Cadastrar</button> 
-			</div>
-		}
-	</div>
+	<div class="wrapper">
+    	<form class="form-signin" action="/filme" method="POST"> 
+			<h2 class="form-signin-heading">Cadastre um novo filme</h2>
+			<hr/>
+			<input type="text" class="form-control" name="Titulo" id="Titulo" placeholder="Titulo" required="true" autofocus="" />
+		  	<input type="text" class="form-control" name="Diretor" id="Diretor" placeholder="Diretor" required="true"/>
+		  	<input type="text" class="form-control" name="Ano" id="Ano" placeholder="Ano" required="true"/>       
+	      	<br/>
+	      	<button class="btn btn-outline-success my-2 my-sm-0 btn-block" type="submit">Entrar</button>
+		</form>
+	  </div>
 </div>
 }
