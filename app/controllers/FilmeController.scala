@@ -21,13 +21,21 @@ import play.api.i18n.MessagesApi
 @Singleton
 class FilmeController @Inject()(dao: FilmeDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
   
-  def listar = Action {
-    var filmes = dao.listar
-    Ok(views.html.filmes.listagem(filmes))
+  def listar = Action {request =>
+    request.session.get("connected").map { user =>
+      var filmes = dao.listar
+      Ok(views.html.filmes.listagem(filmes))
+    }.getOrElse {
+      Unauthorized("Oops, you are not connected")
+    }
   }
   
-  def novoFilme = Action {
-    Ok(views.html.filmes.novoFilme(filmeForm))
+  def novoFilme = Action { request =>
+    request.session.get("connected").map { user =>
+      Ok(views.html.filmes.novoFilme(filmeForm))
+    }.getOrElse {
+      Unauthorized("Oops, you are not connected")
+    }
   }
   
   def novoFilmeSubmissao = Action { implicit request =>
@@ -52,6 +60,7 @@ class FilmeController @Inject()(dao: FilmeDAO, val messagesApi: MessagesApi) ext
       "Ano" -> number(min=1950, max=2050)
     )(FilmeVO.apply)(FilmeVO.unapply)    
   )
+ 
 }
 
 case class FilmeVO(titulo: String, diretor: String, ano: Int)

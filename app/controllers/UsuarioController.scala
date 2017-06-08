@@ -9,27 +9,29 @@ import javax.inject.Singleton
 import play.api.i18n.MessagesApi
 import play.api.i18n.I18nSupport
 import play.api.data.Form
+import play.api.mvc.Session
 
 @Singleton
 class UsuarioController @Inject()(dao: UsuarioDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
   
-  def login = Action {
-    Ok(views.html.users.login(userForm))
+  def logout = Action {
+    Redirect("/").withNewSession
   }
   
   def loginSubmissao = Action { implicit request =>
     userForm.bindFromRequest.fold(
         formWithErrors => {
-        BadRequest(views.html.users.login(formWithErrors))
+        BadRequest(views.html.index())
       },
       usuario => {
         val usuarios = dao.pesquisaPorEmail(usuario.email)
+        
         if(usuarios.size<1){ 
           Ok("Usuario não encontrado")
         }else{
           val user = usuarios.apply(0);
           if(usuario.senha == user.senha){
-            Redirect("/filme")
+            Redirect("/filme").withSession("connected" -> usuario.email)
           }else{
              Ok("Senha errada") 
           }
