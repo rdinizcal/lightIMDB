@@ -2,6 +2,10 @@ body#login{
 	background: #292b2c !important;	
 }
 
+.error-msg {
+	color: #d20b0b;
+}
+
 .wrapper {	
   margin-top: 80px;
   margin-bottom: 80px;
@@ -27,6 +31,22 @@ body#login{
   }
 }
 
-  h2.form-signin-heading {
-  	color: #5cb85c;
+h2.form-signin-heading {
+  color: #5cb85c;
+}
+  
+.form-new-movie {
+  max-width: 380px;
+  padding: 15px 35px 35px;
+  margin: 0 auto;
+  border: 1px solid #dddddd;
+  border-radius: 5%;
+
+  input[type="text"] {
+	margin-bottom: -1px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
   }
+}
+
+ 

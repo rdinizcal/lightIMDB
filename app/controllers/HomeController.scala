@@ -15,7 +15,7 @@ class HomeController @Inject() extends Controller {
     request.session.get("connected").map { user =>
       Redirect("/filme")
     }.getOrElse {
-      Ok(views.html.index())    
+      Ok(views.html.index(""))    
     }
   }
   
