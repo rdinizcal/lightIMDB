@@ -6,7 +6,7 @@ import anorm._
 import anorm.Macro
 import anorm.RowParser
 
-case class Usuario(email: String, senha: String)
+case class Usuario(id : Int, email: String, senha: String)
 
 class UsuarioDAO @Inject()(database : Database){
     val parser : RowParser[models.Usuario] = Macro.namedParser[models.Usuario]

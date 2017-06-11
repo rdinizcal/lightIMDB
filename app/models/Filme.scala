@@ -1,16 +1,11 @@
 package models
 
-import anorm.SQL
-import anorm.SqlQuery
-import anorm.RowParser
 import anorm.Macro
+import anorm.RowParser
+import anorm.SQL
 import anorm.SqlStringInterpolation
-import anorm.SqlParser
-import play.api.db.DB
-import play.api.Play.current
 import javax.inject.Inject
 import play.api.db.Database
-import javax.inject.Singleton
 
 /**
  * A definicao da classe Filme, que corresponde 
@@ -20,12 +15,24 @@ import javax.inject.Singleton
 case class Filme(id: Int, titulo: String, diretor: String, anoProducao: Int) 
 
 /**
+ * A definicao da classe FilmeUsuario, que corresponde 
+ * a um relacionamento n x m com avaliacao do
+ * filme no banco de dados
+ */
+case class FilmeUsuario(idUsuario : Int, idFilme: Int, nota : Int) 
+
+
+/**
  * Um DAO para a classe de entidade Filme. 
  */
 class FilmeDAO @Inject() (database: Database){
-  val parser : RowParser[models.Filme] = Macro.namedParser[models.Filme]
+  val filmeParser : RowParser[models.Filme] = Macro.namedParser[models.Filme]
+  val filmeUsuarioParser : RowParser[models.FilmeUsuario] = Macro.namedParser[models.FilmeUsuario]
   
-  def salvar(filme: Filme) = database.withConnection { implicit connection => 
+  /**
+   * Insere novo filme
+   */
+  def insert(filme: Filme) = database.withConnection { implicit connection => 
     val id: Option[Long] = SQL(
         """INSERT INTO TB_FILME(TITULO, DIRETOR, ANO_PRODUCAO) 
             values ({titulo}, {diretor}, {anoProducao})""")
@@ -34,8 +41,50 @@ class FilmeDAO @Inject() (database: Database){
          'anoProducao -> filme.anoProducao).executeInsert()
   }
   
-  def listar = database.withConnection { implicit connection => 
-    SQL"SELECT ID, TITULO, DIRETOR, ANO_PRODUCAO AS anoProducao FROM TB_FILME".as(parser.*)
+  /**
+   * Seleciona todos os filmes
+   */
+  def selectAll = database.withConnection { implicit connection => 
+    SQL"SELECT ID, TITULO, DIRETOR, ANO_PRODUCAO AS anoProducao FROM TB_FILME".as(filmeParser.*)
   }
-
+  
+  /**
+   * Seleciona nota que usuario deu para filme
+   */
+  def selectByRating(filmeUsuario : FilmeUsuario) = database.withConnection { implicit connection =>
+    SQL("""SELECT * 
+            FROM TB_FILME_USUARIO 
+            WHERE ID_USUARIO = {idUsuario} AND ID_FILME = {idFilme}""")
+        .on('idUsuario -> filmeUsuario.idUsuario,
+            'idFilme -> filmeUsuario.idFilme)
+        .as(filmeUsuarioParser.*)
+  }
+  
+  
+  /**
+   * Atualiza nota que usuario deu para filme
+   */
+  def updateRating(filmeUsuario : FilmeUsuario) = database.withConnection { implicit connection =>
+    SQL("""UPDATE TB_FILME_USUARIO 
+            SET NOTA = {nota}
+            WHERE ID_USUARIO = {idUsuario} AND ID_FILME = {idFilme}""")
+        .on('idUsuario -> filmeUsuario.idUsuario,
+            'idFilme -> filmeUsuario.idFilme,
+            'nota -> filmeUsuario.nota)
+        .executeUpdate()
+  }
+  
+  /**
+   * Insere nota que usuario deu para filme
+   */
+  def insertRating(filmeUsuario : FilmeUsuario) = database.withConnection { implicit connection =>
+    SQL("""INSERT INTO TB_FILME_USUARIO(ID_USUARIO, ID_FILME, NOTA) 
+            values ({idUsuario}, {idFilme}, {nota})""")
+    .on('idUsuario -> filmeUsuario.idUsuario, 
+         'idFilme -> filmeUsuario.idFilme, 
+         'nota -> filmeUsuario.nota).executeInsert()
+  }
+  
+  
+  
 }

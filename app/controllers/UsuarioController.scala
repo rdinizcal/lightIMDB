@@ -31,7 +31,7 @@ class UsuarioController @Inject()(dao: UsuarioDAO, val messagesApi: MessagesApi)
         }else{
           val user = usuarios.apply(0);
           if(usuario.senha == user.senha){
-            Redirect("/filme").withSession("connected" -> usuario.email)
+            Redirect("/filme").withSession("connected" -> user.id.toString())
           }else{
              BadRequest(views.html.index("Usuário e/ou senha incorretos.")) 
           }

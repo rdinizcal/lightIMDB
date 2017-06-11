@@ -48,5 +48,15 @@ h2.form-signin-heading {
 	border-bottom-right-radius: 0;
   }
 }
-
  
+.avaliar-input {
+	width: 30px;
+	padding-left: 7px;
+	padding-right: 7px;
+	border-radius: 5%;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}

@@ -1,5 +1,5 @@
 @* listagem Template File *@
-@(filmes: List[Filme])
+@(filmes: List[Filme], notaForm: Form[NotaVO])
 
 @main("IMDb") {
 
@@ -27,16 +27,19 @@
 <table class="table">
 	<thead class="thead-default">
 	<tr>
-  		<th>#</th>
+  		<th></th>
   		<th>Titulo</th>
   		<th>Diretor</th>
   		<th>Ano</th>
+		<th>Nota Média</th>
 	</tr>
 	</thead>
 	<tbody>
     	@for(filme <- filmes) {
 			<tr>
-				<th scope="row">@filme.id</th> 
+				<th scope="row">
+					<a data-id="@filme.id" data-titulo="@filme.titulo" data-toggle="modal" data-target="#avaliar-modal" class="open-avaliarfilme" href="#">Avaliar</a>
+				</th> 
 	       		<td>@filme.titulo</td> 
 				<td>@filme.diretor</td>
 				<td>@filme.anoProducao</td>
@@ -44,4 +47,30 @@
      	}
 	</tbody>
 </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="avaliar-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Avaliar Filme</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+	  <form id="avaliar-form" method="POST">
+      	<div class="modal-body">
+			Qual nota de 0 a 5 o filme <strong><span id="filme_titulo"></span></strong> merece ?
+			<input class="avaliar-input" type="text" name="Nota" id="Nota" maxlength="1" value="" required="true"></input>
+			<input class="hidden" type="text" name="FilmeId" id="FilmeId" value=""></input>		
+      	</div>
+      	<div class="modal-footer">
+       	  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button id="avaliar-submit" type="button" class="btn btn-primary">Salvar</button>
+      	</div>
+	  </form>
+    </div>
+  </div>
+</div>
 }
