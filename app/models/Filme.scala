@@ -49,7 +49,8 @@ class FilmeDAO @Inject() (database: Database){
 	        FROM TB_FILME fil
           LEFT JOIN TB_FILME_USUARIO fil_u
           ON fil.id = fil_u.id_filme
-          GROUP BY id_filme""")
+          GROUP BY ID
+          ORDER BY TITULO""")
           .as(filmeParser.*)
           
     return result
