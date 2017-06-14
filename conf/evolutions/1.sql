@@ -27,6 +27,12 @@ CREATE TABLE TB_FILME_USUARIO (
 ALTER TABLE TB_FILME_USUARIO
 ADD PRIMARY KEY (ID_USUARIO, ID_FILME);
 
+INSERT INTO TB_FILME (id, titulo, diretor, ano_producao) values (0, 'A Era do Gelo 3', 'Carlos Saldanha', 2009)
+INSERT INTO TB_FILME (id, titulo, diretor, ano_producao) values (1, 'Laranja Mecânica', 'Stanley Kubrick', 1971)
+INSERT INTO TB_FILME (id, titulo, diretor, ano_producao) values (2, 'Piratas do Caribe', 'Espen Sandberg', 2003)
+INSERT INTO TB_FILME (id, titulo, diretor, ano_producao) values (3, 'Piratas do Caribe 2', 'Joachim Rønning', 2009)
+INSERT INTO TB_FILME (id, titulo, diretor, ano_producao) values (4, 'Mulher Maravilha', 'Patty Jenkins', 2017)
+
 # --- !Downs
 
 DROP TABLE User;

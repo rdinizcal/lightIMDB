@@ -1,5 +1,7 @@
 @* listagem Template File *@
 @(filmes: List[Filme], notaForm: Form[NotaVO])
+@import java.lang.String; var result:String=null
+@import scala.util.control._;val loop = new Breaks;
 
 @main("IMDb") {
 
@@ -43,6 +45,8 @@
 	       		<td>@filme.titulo</td> 
 				<td>@filme.diretor</td>
 				<td>@filme.anoProducao</td>
+				<td>@filme.media</td>
+
 			</tr>
      	}
 	</tbody>

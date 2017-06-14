@@ -43,10 +43,10 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
   def novoFilmeSubmissao = Action { implicit request =>
     filmeForm.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest("ERRO: novoFilme")
+        BadRequest(views.html.filmes.novoFilme(formWithErrors))
       },
       filme => {
-        val novoFilme = Filme(0, filme.titulo, filme.diretor, filme.ano)
+        val novoFilme = Filme(0, filme.titulo, filme.diretor, filme.ano, null)
         filmeDAO.insert(novoFilme)
         var filmes = filmeDAO.selectAll
         Created(views.html.filmes.listagem(filmes, notaForm))
@@ -55,10 +55,9 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
   }
   
   def avaliarFilme (filmeId : String) = Action { implicit request =>
-    var filmes = filmeDAO.selectAll
     notaForm.bindFromRequest.fold(
       formWithErrors => {
-        BadRequest("ERRO: avaliarFilme")
+        BadRequest("ERROR: Erro ao inserir nota.")
       },
       notaVO => {        
         request.session.get("connected").map { userId =>
@@ -78,8 +77,6 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
         }
       }
     )
-    
-    
   }
   
   val filmeForm = Form(

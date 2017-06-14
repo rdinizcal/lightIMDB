@@ -12,7 +12,7 @@ import play.api.db.Database
  * a uma entidade cujo estado deve ser salvo no 
  * banco de dados. 
  */
-case class Filme(id: Int, titulo: String, diretor: String, anoProducao: Int) 
+case class Filme(id: Int, titulo: String, diretor: String, anoProducao: Int, media : Option[Double]) 
 
 /**
  * A definicao da classe FilmeUsuario, que corresponde 
@@ -20,7 +20,6 @@ case class Filme(id: Int, titulo: String, diretor: String, anoProducao: Int)
  * filme no banco de dados
  */
 case class FilmeUsuario(idUsuario : Int, idFilme: Int, nota : Int) 
-
 
 /**
  * Um DAO para a classe de entidade Filme. 
@@ -44,8 +43,16 @@ class FilmeDAO @Inject() (database: Database){
   /**
    * Seleciona todos os filmes
    */
-  def selectAll = database.withConnection { implicit connection => 
-    SQL"SELECT ID, TITULO, DIRETOR, ANO_PRODUCAO AS anoProducao FROM TB_FILME".as(filmeParser.*)
+  def selectAll : List[models.Filme] = database.withConnection { implicit connection => 
+    val result : List [models.Filme] =
+      SQL("""SELECT ID, TITULO, DIRETOR, ANO_PRODUCAO as ANOPRODUCAO, AVG(NOTA) as media
+	        FROM TB_FILME fil
+          LEFT JOIN TB_FILME_USUARIO fil_u
+          ON fil.id = fil_u.id_filme
+          GROUP BY id_filme""")
+          .as(filmeParser.*)
+          
+    return result
   }
   
   /**
@@ -59,7 +66,6 @@ class FilmeDAO @Inject() (database: Database){
             'idFilme -> filmeUsuario.idFilme)
         .as(filmeUsuarioParser.*)
   }
-  
   
   /**
    * Atualiza nota que usuario deu para filme
