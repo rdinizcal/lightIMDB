@@ -23,12 +23,12 @@ import play.api.i18n.MessagesApi
 @Singleton
 class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
   
-  def listar = Action {request =>
+   def listar = Action {request =>
     request.session.get("connected").map { user =>
       var filmes = filmeDAO.selectAll
       Ok(views.html.filmes.listagem(filmes, notaForm))
     }.getOrElse {
-      Unauthorized(views.html.unauthorized())
+      Unauthorized(views.html.unauthorized()).withNewSession
     }
   }
   
@@ -36,7 +36,7 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
     request.session.get("connected").map { user =>
       Ok(views.html.filmes.novoFilme(filmeForm))
     }.getOrElse {
-      Unauthorized(views.html.unauthorized())
+      Unauthorized(views.html.unauthorized()).withNewSession
     }
   }
   
@@ -46,10 +46,15 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
         BadRequest(views.html.filmes.novoFilme(formWithErrors))
       },
       filme => {
-        val novoFilme = Filme(0, filme.titulo, filme.diretor, filme.ano, null)
-        filmeDAO.insert(novoFilme)
-        var filmes = filmeDAO.selectAll
-        Created(views.html.filmes.listagem(filmes, notaForm))
+        request.session.get("connected").map { user =>
+          val novoFilme = Filme(0, filme.titulo, filme.diretor, filme.ano, null)
+          filmeDAO.insert(novoFilme)
+          var filmes = filmeDAO.selectAll
+          Created(views.html.filmes.listagem(filmes, notaForm))
+        }.getOrElse {
+          Unauthorized(views.html.unauthorized()).withNewSession
+        }
+        
       }
     )
   }
@@ -59,22 +64,20 @@ class FilmeController @Inject()(filmeDAO: FilmeDAO, val messagesApi: MessagesApi
       formWithErrors => {
         BadRequest("ERROR: Erro ao inserir nota.")
       },
-      notaVO => {        
-        request.session.get("connected").map { userId =>
-          var filmeUsuario = FilmeUsuario(userId.toInt, notaVO.filmeId, notaVO.nota)
+      notaVO => { 
+        request.session.get("connected").map { user =>
+          var filmeUsuario = FilmeUsuario(user.toInt, notaVO.filmeId, notaVO.nota)
           var listFU = filmeDAO.selectByRating(filmeUsuario)
-          
           if(listFU.size<1){
             filmeDAO.insertRating(filmeUsuario)
           }else{
             filmeDAO.updateRating(filmeUsuario)
           }
-             
-          Redirect("/filme")
           
-        }.getOrElse {
-          Unauthorized(views.html.unauthorized())
-        }
+          Redirect("/filme").withSession("connected" -> user)
+       }.getOrElse {
+          Unauthorized(views.html.unauthorized()).withNewSession
+       }     
       }
     )
   }

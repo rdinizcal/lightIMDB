@@ -12,7 +12,7 @@ import play.api.data.Form
 import play.api.mvc.Session
 
 @Singleton
-class UsuarioController @Inject()(dao: UsuarioDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class UsuarioController @Inject()(usuarioDAO: UsuarioDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
   
   def logout = Action {
     Redirect("/").withNewSession
@@ -24,7 +24,7 @@ class UsuarioController @Inject()(dao: UsuarioDAO, val messagesApi: MessagesApi)
         BadRequest(views.html.index("Preencher todos os campos."))
       },
       usuario => {
-        val usuarios = dao.pesquisaPorEmail(usuario.email)
+        val usuarios = usuarioDAO.pesquisaPorEmail(usuario.email)
         
         if(usuarios.size<1){ 
           BadRequest(views.html.index("Usuário e/ou senha incorretos."))

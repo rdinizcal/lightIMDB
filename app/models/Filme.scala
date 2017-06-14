@@ -60,7 +60,7 @@ class FilmeDAO @Inject() (database: Database){
    * Seleciona nota que usuario deu para filme
    */
   def selectByRating(filmeUsuario : FilmeUsuario) = database.withConnection { implicit connection =>
-    SQL("""SELECT * 
+    SQL("""SELECT ID_FILME as idFilme, ID_USUARIO as idUsuario, NOTA 
             FROM TB_FILME_USUARIO 
             WHERE ID_USUARIO = {idUsuario} AND ID_FILME = {idFilme}""")
         .on('idUsuario -> filmeUsuario.idUsuario,
