@@ -18,6 +18,10 @@ class UsuarioController @Inject()(usuarioDAO: UsuarioDAO, val messagesApi: Messa
     Redirect("/").withNewSession
   }
   
+  def signup = Action {
+    Ok(views.html.users.signup("")) 
+  }
+  
   def loginSubmissao = Action { implicit request =>
     userForm.bindFromRequest.fold(
       formWithErrors => {
@@ -35,6 +39,24 @@ class UsuarioController @Inject()(usuarioDAO: UsuarioDAO, val messagesApi: Messa
           }else{
              BadRequest(views.html.index("Usuário e/ou senha incorretos.")) 
           }
+        }
+      })
+  }
+  
+  def signupSubmissao = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      formWithErrors => {
+        BadRequest(views.html.users.signup("Preencher todos os campos."))
+      },
+      usuario => {
+        val usuarios = usuarioDAO.pesquisaPorEmail(usuario.email)
+        
+        if(usuarios.size>0){ 
+          BadRequest(views.html.index("Usuário já existe no sistema."))
+        }else{
+          val novoUser = Usuario(0, usuario.email, usuario.senha)
+          usuarioDAO.insert(novoUser)
+          Ok(views.html.index(""))
         }
       })
   }

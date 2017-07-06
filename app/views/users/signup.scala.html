@@ -1,18 +1,18 @@
-@* login Template File *@
+@* Sign Up Template File *@
 @(message : String)
 
 @main("IMDb") {
 
 <body id="login">
   <div class="wrapper">
-    <form class="form-signin" action="/login" method="POST">       
-	  <h2 class="form-signin-heading">UnB - IMDb</h2>
+    <form class="form-signin" action="/signup" method="POST">       
+	  <h2 class="form-signin-heading">Cadastrar Usuário</h2>
 	  <hr/>
       <input type="text" class="form-control" name="Email" id="Email" placeholder="Email Address" required="true" autofocus="" />
 	  <input type="password" class="form-control" name="Senha" id="Senha" placeholder="Password" required="true"/>      
 	  <label class="label-control error-msg" for="error">@message</label>
-      <button class="btn btn-outline-success my-2 my-sm-0 btn-block" type="submit">Entrar</button>
-	  <a href="/signup">Cadastrar</a>
+      <button class="btn btn-outline-success my-2 my-sm-0 btn-block" type="submit">Cadastrar</button>
+	  <a href="/">Voltar</a>
     </form>
   </div>
 </body>
